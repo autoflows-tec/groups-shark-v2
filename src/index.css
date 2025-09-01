@@ -43,11 +43,11 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 10.6% 64.9%;
 
-    /* E3 Digital Custom Variables */
-    --e3-orange: #FD6000;
-    --e3-light-gray: #D9D9D9;
-    --e3-dark: #222222;
-    --e3-white: #FFFFFF;
+    /* Shark Aceleradora Custom Variables */
+    --shark-primary: #2463F5;
+    --shark-light-gray: #D9D9D9;
+    --shark-dark: #222222;
+    --shark-white: #FFFFFF;
 
     /* Legacy Shark variables (manter por compatibilidade) */
     --shark-blue: 220 100% 35%;

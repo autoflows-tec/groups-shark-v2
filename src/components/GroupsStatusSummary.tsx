@@ -22,7 +22,7 @@ export const GroupsStatusSummary = ({ statusSummary, activeFilter, onFilterChang
       {/* Estável */}
       <Card 
         className={cn(
-          "bg-white dark:bg-e3-dark-card border-2 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md",
+          "bg-white dark:bg-shark-dark-card border-2 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md",
           activeFilter === 'estavel' 
             ? "border-green-500 dark:border-green-400 ring-2 ring-green-200 dark:ring-green-800" 
             : "border-green-200 dark:border-green-700 hover:border-green-300 dark:hover:border-green-600"
@@ -40,7 +40,7 @@ export const GroupsStatusSummary = ({ statusSummary, activeFilter, onFilterChang
               <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="text-sm font-inter text-e3-gray dark:text-gray-300">Grupos Estáveis</p>
+              <p className="text-sm font-inter text-shark-gray dark:text-gray-300">Grupos Estáveis</p>
               <p className="text-2xl font-poppins font-semibold text-green-600 dark:text-green-400">
                 {statusSummary.estavel}
               </p>
@@ -57,7 +57,7 @@ export const GroupsStatusSummary = ({ statusSummary, activeFilter, onFilterChang
       {/* Alerta */}
       <Card 
         className={cn(
-          "bg-white dark:bg-e3-dark-card border-2 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md",
+          "bg-white dark:bg-shark-dark-card border-2 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md",
           activeFilter === 'alerta' 
             ? "border-yellow-500 dark:border-yellow-400 ring-2 ring-yellow-200 dark:ring-yellow-800" 
             : "border-yellow-200 dark:border-yellow-700 hover:border-yellow-300 dark:hover:border-yellow-600"
@@ -75,7 +75,7 @@ export const GroupsStatusSummary = ({ statusSummary, activeFilter, onFilterChang
               <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
             </div>
             <div>
-              <p className="text-sm font-inter text-e3-gray dark:text-gray-300">Grupos em Alerta</p>
+              <p className="text-sm font-inter text-shark-gray dark:text-gray-300">Grupos em Alerta</p>
               <p className="text-2xl font-poppins font-semibold text-yellow-600 dark:text-yellow-400">
                 {statusSummary.alerta}
               </p>
@@ -92,7 +92,7 @@ export const GroupsStatusSummary = ({ statusSummary, activeFilter, onFilterChang
       {/* Crítico */}
       <Card 
         className={cn(
-          "bg-white dark:bg-e3-dark-card border-2 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md",
+          "bg-white dark:bg-shark-dark-card border-2 shadow-sm cursor-pointer transition-all duration-200 hover:shadow-md",
           activeFilter === 'critico' 
             ? "border-red-500 dark:border-red-400 ring-2 ring-red-200 dark:ring-red-800" 
             : "border-red-200 dark:border-red-700 hover:border-red-300 dark:hover:border-red-600"
@@ -110,7 +110,7 @@ export const GroupsStatusSummary = ({ statusSummary, activeFilter, onFilterChang
               <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             </div>
             <div>
-              <p className="text-sm font-inter text-e3-gray dark:text-gray-300">Grupos Críticos</p>
+              <p className="text-sm font-inter text-shark-gray dark:text-gray-300">Grupos Críticos</p>
               <p className="text-2xl font-poppins font-semibold text-red-600 dark:text-red-400">
                 {statusSummary.critico}
               </p>

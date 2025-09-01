@@ -62,16 +62,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// E3 Digital Brand Colors - Atualizadas para melhor legibilidade
-				'e3-orange': '#FD6000',
-				'e3-gray': '#6B7280', // Cinza médio para melhor leitura
-				'e3-dark': '#111827', // Preto mais claro/legível
-				'e3-white': '#FFFFFF',
+				// Shark Aceleradora Brand Colors - Atualizadas para melhor legibilidade
+				'shark-primary': '#2463F5',
+				'shark-gray': '#6B7280', // Cinza médio para melhor leitura
+				'shark-dark': '#111827', // Preto mais claro/legível
+				'shark-white': '#FFFFFF',
 				// Dark mode specific colors
-				'e3-dark-bg': '#1F2937', // Fundo dark mode
-				'e3-dark-card': '#374151', // Cards no dark mode
+				'shark-dark-bg': '#1F2937', // Fundo dark mode
+				'shark-dark-card': '#374151', // Cards no dark mode
 				// Legacy colors (manter compatibilidade)
-				'e3-light-gray': '#D9D9D9',
+				'shark-light-gray': '#D9D9D9',
 				shark: {
 					blue: 'hsl(var(--shark-blue))',
 					'blue-dark': 'hsl(var(--shark-blue-dark))',
@@ -79,7 +79,7 @@ export default {
 				}
 			},
 			backgroundImage: {
-				'e3-gradient': 'linear-gradient(90deg, #FD6000 0%, #FF7C00 100%)',
+				'shark-gradient-main': 'linear-gradient(90deg, #2463F5 0%, #4A80F7 100%)',
 				'shark-gradient': 'var(--shark-gradient)',
 				'shark-gradient-light': 'var(--shark-gradient-light)',
 			},

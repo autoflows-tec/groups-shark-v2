@@ -31,8 +31,16 @@ export const isMessageFromToday = (dateString: string | null) => {
   }
 };
 
-export const getStatusType = (status: string | null, resumo: string | null) => {
-  if (!status && !resumo) return 'sem-mensagens';
+export const getStatusType = (status: string | null, resumo: string | null, totalMensagens?: number) => {
+  // PRIORIDADE 1: Se não há mensagens E não há análise manual, considerar sem mensagens
+  if (totalMensagens === 0 && (!status || status.trim() === '') && (!resumo || resumo.trim() === '')) {
+    return 'sem-mensagens';
+  }
+  
+  // PRIORIDADE 2: Se não há dados de análise (mesmo com mensagens), considerar sem dados
+  if ((!status || status.trim() === '') && (!resumo || resumo.trim() === '')) {
+    return 'sem-mensagens';
+  }
   
   const statusLower = (status || '').toLowerCase();
   const resumoLower = (resumo || '').toLowerCase();
@@ -43,27 +51,43 @@ export const getStatusType = (status: string | null, resumo: string | null) => {
     return 'sem-mensagens';
   }
   
-  // Verificar se é crítico
+  // Verificar se é crítico (palavras que indicam problemas)
   if (statusLower.includes('crítico') || statusLower.includes('critico') || 
-      resumoLower.includes('crítico') || resumoLower.includes('critico')) {
+      statusLower.includes('problema') || statusLower.includes('erro') ||
+      resumoLower.includes('crítico') || resumoLower.includes('critico') ||
+      resumoLower.includes('problema') || resumoLower.includes('erro')) {
     return 'critico';
   }
   
-  // Verificar se é alerta
-  if (statusLower.includes('alerta') || statusLower.includes('warning') ||
-      resumoLower.includes('alerta') || resumoLower.includes('warning')) {
+  // Verificar se é alerta (pendências, dificuldades) - incluir valor exato do banco
+  if (statusLower.includes('alerta') || statusLower === 'alerta' ||
+      statusLower.includes('warning') ||
+      statusLower.includes('pendência') || statusLower.includes('pendencia') ||
+      statusLower.includes('dificuldade') || statusLower.includes('aguardando') ||
+      resumoLower.includes('alerta') || resumoLower.includes('warning') ||
+      resumoLower.includes('pendência') || resumoLower.includes('pendencia') ||
+      resumoLower.includes('dificuldade') || resumoLower.includes('aguardando')) {
     return 'alerta';
   }
   
-  // Verificar se é estável
-  if (statusLower.includes('estável') || statusLower.includes('estavel') || 
+  // Verificar se é estável (feedback positivo explícito) - incluir valor exato do banco
+  if (statusLower.includes('estável') || statusLower === 'estável' || 
+      statusLower.includes('estavel') || statusLower === 'estavel' ||
       statusLower.includes('ativo') || statusLower.includes('ok') ||
+      statusLower.includes('positivo') || statusLower.includes('bom') ||
+      statusLower.includes('satisfatório') || statusLower.includes('aprovado') ||
       resumoLower.includes('estável') || resumoLower.includes('estavel') ||
-      resumoLower.includes('ativo') || resumoLower.includes('ok')) {
+      resumoLower.includes('ativo') || resumoLower.includes('ok') ||
+      resumoLower.includes('positivo') || resumoLower.includes('bom') ||
+      resumoLower.includes('satisfatório') || resumoLower.includes('aprovado') ||
+      resumoLower.includes('cordial') || resumoLower.includes('colaborativo') ||
+      resumoLower.includes('produtivo') || resumoLower.includes('tranquilo')) {
     return 'estavel';
   }
   
-  return 'sem-categoria';
+  // Se tem conteúdo mas não corresponde a nenhuma categoria específica,
+  // assumir como estável (padrão positivo) em vez de sem-categoria
+  return 'estavel';
 };
 
 export const clearStatusWhenNoMessages = async (groupId: number) => {

@@ -1,6 +1,6 @@
-# Guia de Alteração da Identidade Visual - Autoflows Grupos E3Digital
+# Guia de Alteração da Identidade Visual - Shark Aceleradora Grupos
 
-Este documento fornece um passo a passo completo para alterar a identidade visual do sistema de gerenciamento de grupos da E3Digital.
+Este documento fornece um passo a passo completo para alterar a identidade visual do sistema de gerenciamento de grupos da Shark Aceleradora.
 
 ## 📁 Estrutura de Arquivos da Identidade Visual
 
@@ -11,34 +11,34 @@ Este documento fornece um passo a passo completo para alterar a identidade visua
 - `components.json` - Configurações do shadcn/ui
 
 ### Componentes de Identidade Visual  
-- `src/components/E3Logo.tsx` - Componente do logotipo
+- `src/components/SharkLogo.tsx` - Componente do logotipo
 - `src/components/GroupsHeader.tsx` - Cabeçalho principal com branding
 - Componentes UI em `src/components/ui/` - Botões, cards, etc.
 
 ### Assets (Imagens e Logos)
-- `public/e3-logo.png` - Logo principal da E3Digital
+- `public/shark-logo.jpg` - Logo principal da Shark Aceleradora
 - `public/favicon.ico` - Favicon do site
 - `public/placeholder.svg` - Imagem placeholder
 
 ## 🎨 Sistema de Cores Atual
 
-### Cores Primárias da E3Digital (definidas em `src/index.css:46-51`)
+### Cores Primárias da Shark Aceleradora (definidas em `src/index.css:46-51`)
 ```css
---e3-orange: #FD6000;      /* Laranja principal da marca */
---e3-light-gray: #D9D9D9;  /* Cinza claro */
---e3-dark: #222222;        /* Preto/cinza escuro */
---e3-white: #FFFFFF;       /* Branco */
+--shark-orange: #2463F5;      /* Laranja principal da marca */
+--shark-light-gray: #D9D9D9;  /* Cinza claro */
+--shark-dark: #222222;        /* Preto/cinza escuro */
+--shark-white: #FFFFFF;       /* Branco */
 ```
 
 ### Cores Extendidas no Tailwind (`tailwind.config.ts:65-79`)
 ```javascript
-'e3-orange': '#FD6000',
-'e3-gray': '#6B7280',        /* Cinza médio para melhor legibilidade */
-'e3-dark': '#111827',        /* Preto mais legível */
-'e3-white': '#FFFFFF',
-'e3-dark-bg': '#1F2937',     /* Fundo para modo escuro */
-'e3-dark-card': '#374151',   /* Cards no modo escuro */
-'e3-light-gray': '#D9D9D9',  /* Compatibilidade */
+'shark-orange': '#2463F5',
+'shark-gray': '#6B7280',        /* Cinza médio para melhor legibilidade */
+'shark-dark': '#111827',        /* Preto mais legível */
+'shark-white': '#FFFFFF',
+'shark-dark-bg': '#1F2937',     /* Fundo para modo escuro */
+'shark-dark-card': '#374151',   /* Cards no modo escuro */
+'shark-light-gray': '#D9D9D9',  /* Compatibilidade */
 ```
 
 ## 📋 Passo a Passo para Alterar a Identidade Visual
@@ -48,40 +48,40 @@ Este documento fornece um passo a passo completo para alterar a identidade visua
 #### 1.1 Cores Primárias (src/index.css:46-51)
 ```css
 /* Substitua os valores atuais pelas novas cores da marca */
---e3-orange: #SUA_COR_PRIMARIA;
---e3-light-gray: #SUA_COR_CINZA_CLARO;
---e3-dark: #SUA_COR_ESCURA;
---e3-white: #SUA_COR_BRANCA;
+--shark-orange: #SUA_COR_PRIMARIA;
+--shark-light-gray: #SUA_COR_CINZA_CLARO;
+--shark-dark: #SUA_COR_ESCURA;
+--shark-white: #SUA_COR_BRANCA;
 ```
 
 #### 1.2 Cores no Tailwind (tailwind.config.ts:65-79)
 ```javascript
 // Atualize as cores para corresponder às novas cores da marca
-'e3-orange': '#SUA_COR_PRIMARIA',
-'e3-gray': '#SUA_COR_CINZA_MEDIO',
-'e3-dark': '#SUA_COR_ESCURA',
-'e3-white': '#SUA_COR_BRANCA',
-'e3-dark-bg': '#SUA_COR_FUNDO_ESCURO',
-'e3-dark-card': '#SUA_COR_CARD_ESCURO',
+'shark-orange': '#SUA_COR_PRIMARIA',
+'shark-gray': '#SUA_COR_CINZA_MEDIO',
+'shark-dark': '#SUA_COR_ESCURA',
+'shark-white': '#SUA_COR_BRANCA',
+'shark-dark-bg': '#SUA_COR_FUNDO_ESCURO',
+'shark-dark-card': '#SUA_COR_CARD_ESCURO',
 ```
 
 #### 1.3 Gradientes (tailwind.config.ts:82-85)
 ```javascript
 // Atualize o gradiente principal
-'e3-gradient': 'linear-gradient(90deg, #SUA_COR_PRIMARIA 0%, #SUA_COR_SECUNDARIA 100%)',
+'shark-gradient': 'linear-gradient(90deg, #SUA_COR_PRIMARIA 0%, #SUA_COR_SECUNDARIA 100%)',
 ```
 
 ### 2. **Alteração do Logotipo**
 
 #### 2.1 Substituir arquivo de imagem
-- Substitua o arquivo `public/e3-logo.png` pelo novo logo
-- Mantenha o mesmo nome do arquivo ou atualize a referência em `src/components/E3Logo.tsx:9`
+- Substitua o arquivo `public/shark-logo.jpg` pelo novo logo
+- Mantenha o mesmo nome do arquivo ou atualize a referência em `src/components/SharkLogo.tsx:9`
 - Formato recomendado: PNG com fundo transparente
 - Dimensões recomendadas: 200x200px (ou proporção adequada)
 
 #### 2.2 Atualizar componente do logo (se necessário)
 ```tsx
-// Em src/components/E3Logo.tsx:8-12
+// Em src/components/SharkLogo.tsx:8-12
 <img 
   src="/seu-novo-logo.png"  // Se alterou o nome do arquivo
   alt="Sua Nova Marca"      // Atualize o alt text
@@ -147,7 +147,7 @@ Atualize as variáveis CSS dentro da classe `.dark` para refletir suas cores no 
 Os botões já usam as classes `bg-e3-orange` e `hover:bg-e3-orange/90`, então as alterações de cor se aplicarão automaticamente.
 
 #### 6.2 Cards e componentes
-Procure por classes que usam as cores da E3Digital em:
+Procure por classes que usam as cores da Shark Aceleradora em:
 - `src/components/GroupsTable.tsx`
 - `src/components/GroupsStatusSummary.tsx`
 - Outros componentes na pasta `src/components/`
@@ -173,7 +173,7 @@ npm run type-check  # se disponível
 
 - [ ] Cores primárias alteradas em `src/index.css`
 - [ ] Cores atualizadas em `tailwind.config.ts`
-- [ ] Logo substituído em `public/e3-logo.png`
+- [ ] Logo substituído em `public/shark-logo.jpg`
 - [ ] Texto da marca atualizado em `GroupsHeader.tsx`
 - [ ] Favicon substituído em `public/favicon.ico`
 - [ ] Fontes alteradas (se necessário)

@@ -60,7 +60,7 @@ export const GroupsPagination = ({
 
   return (
     <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
-      <div className="text-sm text-e3-dark dark:text-white font-inter">
+      <div className="text-sm text-shark-dark dark:text-white font-inter">
         Mostrando {startIndex + 1} a {Math.min(endIndex, totalItems)} de {totalItems} grupos
       </div>
       
@@ -70,7 +70,7 @@ export const GroupsPagination = ({
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="border-gray-300 dark:border-gray-600 text-e3-dark dark:text-white hover:bg-e3-orange hover:text-white hover:border-e3-orange font-inter"
+          className="border-gray-300 dark:border-gray-600 text-shark-dark dark:text-white hover:bg-shark-primary hover:text-white hover:border-shark-primary font-inter"
         >
           <ChevronLeft className="h-4 w-4" />
           <span className="hidden sm:inline ml-1">Anterior</span>
@@ -80,7 +80,7 @@ export const GroupsPagination = ({
           {pageNumbers.map((page, index) => (
             page === '...' ? (
               <div key={`ellipsis-${index}`} className="px-2">
-                <MoreHorizontal className="h-4 w-4 text-e3-gray dark:text-gray-400" />
+                <MoreHorizontal className="h-4 w-4 text-shark-gray dark:text-gray-400" />
               </div>
             ) : (
               <Button
@@ -91,8 +91,8 @@ export const GroupsPagination = ({
                 className={`
                   min-w-[2.5rem] h-9
                   ${currentPage === page 
-                    ? "bg-e3-orange text-white hover:bg-e3-orange/90 border-e3-orange" 
-                    : "border-gray-300 dark:border-gray-600 text-e3-dark dark:text-white hover:bg-e3-orange hover:text-white hover:border-e3-orange"
+                    ? "bg-shark-primary text-white hover:bg-shark-primary/90 border-shark-primary" 
+                    : "border-gray-300 dark:border-gray-600 text-shark-dark dark:text-white hover:bg-shark-primary hover:text-white hover:border-shark-primary"
                   }
                   font-inter
                 `}
@@ -108,7 +108,7 @@ export const GroupsPagination = ({
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="border-gray-300 dark:border-gray-600 text-e3-dark dark:text-white hover:bg-e3-orange hover:text-white hover:border-e3-orange font-inter"
+          className="border-gray-300 dark:border-gray-600 text-shark-dark dark:text-white hover:bg-shark-primary hover:text-white hover:border-shark-primary font-inter"
         >
           <span className="hidden sm:inline mr-1">Próxima</span>
           <ChevronRight className="h-4 w-4" />

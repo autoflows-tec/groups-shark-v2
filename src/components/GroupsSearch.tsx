@@ -24,7 +24,7 @@ const getStatusIcon = (status: StatusFilter) => {
     case 'sem-mensagens':
       return <List className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
     default:
-      return <Filter className="h-4 w-4 text-e3-gray dark:text-gray-400" />;
+      return <Filter className="h-4 w-4 text-shark-gray dark:text-gray-400" />;
   }
 };
 
@@ -45,56 +45,56 @@ const getStatusLabel = (status: StatusFilter) => {
 
 export const GroupsSearch = ({ searchTerm, statusFilter, onSearchChange, onStatusFilterChange, totalGroups }: GroupsSearchProps) => {
   return (
-    <Card className="mb-6 bg-white dark:bg-e3-dark-card border-2 border-gray-200 dark:border-gray-600 shadow-sm">
+    <Card className="mb-6 bg-white dark:bg-shark-dark-card border-2 border-gray-200 dark:border-gray-600 shadow-sm">
       <CardContent className="p-4">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Busca por nome */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-e3-gray dark:text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-shark-gray dark:text-gray-400 h-4 w-4" />
             <Input
               type="text"
               placeholder="Buscar grupos por nome..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 border-gray-300 dark:border-gray-600 bg-white dark:bg-e3-dark-card text-e3-dark dark:text-white placeholder:text-e3-gray dark:placeholder:text-gray-400 focus:border-e3-orange focus:ring-e3-orange font-inter"
+              className="pl-10 border-gray-300 dark:border-gray-600 bg-white dark:bg-shark-dark-card text-shark-dark dark:text-white placeholder:text-shark-gray dark:placeholder:text-gray-400 focus:border-shark-primary focus:ring-shark-primary font-inter"
             />
           </div>
 
           {/* Filtro por status */}
           <div className="lg:w-48">
             <Select value={statusFilter} onValueChange={onStatusFilterChange}>
-              <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-e3-dark-card text-e3-dark dark:text-white focus:border-e3-orange focus:ring-e3-orange font-inter">
+              <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-shark-dark-card text-shark-dark dark:text-white focus:border-shark-primary focus:ring-shark-primary font-inter">
                 <div className="flex items-center gap-2">
                   {getStatusIcon(statusFilter)}
                   <SelectValue />
                 </div>
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-e3-dark-card border-gray-300 dark:border-gray-600">
-                <SelectItem value="todos" className="text-e3-dark dark:text-white font-inter">
+              <SelectContent className="bg-white dark:bg-shark-dark-card border-gray-300 dark:border-gray-600">
+                <SelectItem value="todos" className="text-shark-dark dark:text-white font-inter">
                   <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4 text-e3-gray dark:text-gray-400" />
+                    <Filter className="h-4 w-4 text-shark-gray dark:text-gray-400" />
                     {getStatusLabel('todos')}
                   </div>
                 </SelectItem>
-                <SelectItem value="estavel" className="text-e3-dark dark:text-white font-inter">
+                <SelectItem value="estavel" className="text-shark-dark dark:text-white font-inter">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
                     {getStatusLabel('estavel')}
                   </div>
                 </SelectItem>
-                <SelectItem value="alerta" className="text-e3-dark dark:text-white font-inter">
+                <SelectItem value="alerta" className="text-shark-dark dark:text-white font-inter">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                     {getStatusLabel('alerta')}
                   </div>
                 </SelectItem>
-                <SelectItem value="critico" className="text-e3-dark dark:text-white font-inter">
+                <SelectItem value="critico" className="text-shark-dark dark:text-white font-inter">
                   <div className="flex items-center gap-2">
                     <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
                     {getStatusLabel('critico')}
                   </div>
                 </SelectItem>
-                <SelectItem value="sem-mensagens" className="text-e3-dark dark:text-white font-inter">
+                <SelectItem value="sem-mensagens" className="text-shark-dark dark:text-white font-inter">
                   <div className="flex items-center gap-2">
                     <List className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                     {getStatusLabel('sem-mensagens')}
@@ -105,7 +105,7 @@ export const GroupsSearch = ({ searchTerm, statusFilter, onSearchChange, onStatu
           </div>
 
           {/* Contador de resultados */}
-          <div className="flex items-center text-sm text-e3-dark dark:text-white font-inter lg:min-w-fit">
+          <div className="flex items-center text-sm text-shark-dark dark:text-white font-inter lg:min-w-fit">
             <span className="font-medium">{totalGroups}</span> grupos encontrados
           </div>
         </div>

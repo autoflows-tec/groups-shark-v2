@@ -1,6 +1,6 @@
-# E3 Digital - Painel de Grupos de Clientes
+# Shark Aceleradora - Painel de Grupos de Clientes
 
-Sistema de monitoramento e gerenciamento de grupos de WhatsApp para clientes da E3 Digital.
+Sistema de monitoramento e gerenciamento de grupos de WhatsApp para clientes da Shark Aceleradora.
 
 ## 📋 Visão Geral
 
@@ -89,7 +89,7 @@ Todas com estrutura:
 - ✅ Animações e transições suaves
 - ✅ Feedback visual consistente
 - ✅ Error handling robusto
-- ✅ Tema corporativo E3 Digital
+- ✅ Tema corporativo Shark Aceleradora
 
 ## 📁 Estrutura de Arquivos Principais
 
@@ -151,9 +151,9 @@ npm run lint       # Verificar código com ESLint
 ## 🎨 Padrões de Design
 
 ### Cores Principais
-- **E3 Orange**: `#FF6B35` - Cor primária da marca
-- **E3 Dark**: `#1A1A1A` - Texto principal
-- **E3 Gray**: `#6B7280` - Texto secundário
+- **Shark Primary**: `#2463F5` - Cor primária da marca
+- **Shark Dark**: `#1A1A1A` - Texto principal
+- **Shark Gray**: `#6B7280` - Texto secundário
 
 ### Componentes Reutilizáveis
 - **EditableSelectCell**: Célula editável com select
@@ -211,7 +211,7 @@ npm run build
 
 ## 👥 Equipe
 
-Desenvolvido para **E3 Digital** com foco em monitoramento eficiente de grupos de clientes WhatsApp.
+Desenvolvido para **Shark Aceleradora** com foco em monitoramento eficiente de grupos de clientes WhatsApp.
 
 ---
 

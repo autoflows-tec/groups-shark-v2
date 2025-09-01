@@ -408,12 +408,12 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-white dark:bg-e3-dark-card border-gray-200 dark:border-gray-600">
+      <DialogContent className="sm:max-w-[500px] bg-white dark:bg-shark-dark-card border-gray-200 dark:border-gray-600">
         <DialogHeader>
-          <DialogTitle className="text-e3-dark dark:text-white font-poppins">
+          <DialogTitle className="text-shark-dark dark:text-white font-poppins">
             {getTitle()}
           </DialogTitle>
-          <DialogDescription className="text-e3-gray dark:text-gray-300 font-inter">
+          <DialogDescription className="text-shark-gray dark:text-gray-300 font-inter">
             {getDescription()}
           </DialogDescription>
         </DialogHeader>
@@ -422,14 +422,14 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
           {items.map((item) => (
             <div 
               key={item.id} 
-              className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-e3-dark-bg"
+              className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-shark-dark-bg"
             >
               {editingId === item.id ? (
                 <div className="flex items-center space-x-2 flex-1">
                   <Input
                     value={editingName}
                     onChange={(e) => setEditingName(e.target.value)}
-                    className="flex-1 text-e3-dark dark:text-white bg-white dark:bg-e3-dark-card border-gray-300 dark:border-gray-600"
+                    className="flex-1 text-shark-dark dark:text-white bg-white dark:bg-shark-dark-card border-gray-300 dark:border-gray-600"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleSaveEdit();
                       if (e.key === 'Escape') handleCancelEdit();
@@ -457,7 +457,7 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
               ) : (
                 <>
                   <div className="flex-1">
-                    <span className="text-e3-dark dark:text-white font-inter font-medium">
+                    <span className="text-shark-dark dark:text-white font-inter font-medium">
                       {type === 'groups' 
                         ? ('nome_grupo' in item ? item.nome_grupo : null) || ('grupo' in item ? item.grupo : '')
                         : ('nome' in item ? item.nome : '')
@@ -478,7 +478,7 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
                         variant="outline" 
                         onClick={() => handleEdit(item.id, item.nome)}
                         disabled={hook.loading || editingId !== null}
-                        className="border-gray-300 dark:border-gray-600 text-e3-dark dark:text-white hover:bg-gray-100 dark:hover:bg-e3-dark-card"
+                        className="border-gray-300 dark:border-gray-600 text-shark-dark dark:text-white hover:bg-gray-100 dark:hover:bg-shark-dark-card"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -507,7 +507,7 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
             type === 'groups' ? (
               <div className="space-y-4 p-4 border border-gray-200 dark:border-gray-600 rounded-md bg-blue-50 dark:bg-blue-900/20">
                 <div className="space-y-2">
-                  <Label className="text-e3-dark dark:text-white font-inter font-medium">
+                  <Label className="text-shark-dark dark:text-white font-inter font-medium">
                     Link de Convite do WhatsApp
                   </Label>
                   <div className="flex gap-2">
@@ -515,7 +515,7 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
                       value={whatsappLink}
                       onChange={(e) => handleWhatsAppLinkChange(e.target.value)}
                       placeholder="https://chat.whatsapp.com/ABC123..."
-                      className="flex-1 text-e3-dark dark:text-white bg-white dark:bg-e3-dark-card border-gray-300 dark:border-gray-600"
+                      className="flex-1 text-shark-dark dark:text-white bg-white dark:bg-shark-dark-card border-gray-300 dark:border-gray-600"
                     />
                     <Button 
                       size="sm" 
@@ -569,7 +569,7 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="Digite o nome..."
-                  className="flex-1 text-e3-dark dark:text-white bg-white dark:bg-e3-dark-card border-gray-300 dark:border-gray-600"
+                  className="flex-1 text-shark-dark dark:text-white bg-white dark:bg-shark-dark-card border-gray-300 dark:border-gray-600"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleAdd();
                     if (e.key === 'Escape') handleCancelAdd();
@@ -599,7 +599,7 @@ export const ConfigurationDialog = ({ open, onOpenChange, type }: ConfigurationD
             <Button
               onClick={() => setIsAdding(true)}
               disabled={hook.loading || editingId !== null}
-              className="w-full bg-e3-orange hover:bg-e3-orange/90 text-white border-0 rounded-md shadow-sm font-inter font-medium"
+              className="w-full bg-shark-primary hover:bg-shark-primary/90 text-white border-0 rounded-md shadow-sm font-inter font-medium"
             >
               <Plus className="h-4 w-4 mr-2" />
               {type === 'groups' ? 'Adicionar Grupo' : 'Adicionar Novo'}

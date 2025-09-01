@@ -4,7 +4,9 @@ import { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 import { clearStatusWhenNoMessages } from "@/utils/groupUtils";
 
-type Group = Database['public']['Tables']['Lista_de_Grupos']['Row'];
+type Group = Database['public']['Tables']['Lista_de_Grupos']['Row'] & {
+  total_mensagens?: number;
+};
 type GroupInsert = Database['public']['Tables']['Lista_de_Grupos']['Insert'];
 type GroupUpdate = Database['public']['Tables']['Lista_de_Grupos']['Update'];
 
@@ -21,20 +23,40 @@ export const useGroups = () => {
       
       console.log('🔄 Iniciando busca pelos grupos...');
       
-      const { data, error: supabaseError, count } = await supabase
+      // Buscar grupos
+      const { data: groupsData, error: supabaseError, count } = await supabase
         .from('Lista_de_Grupos')
         .select('*', { count: 'exact' })
         .order('id', { ascending: false });
 
-      console.log('📊 Resposta do Supabase:', { data, error: supabaseError, count });
+      console.log('📊 Resposta do Supabase:', { data: groupsData, error: supabaseError, count });
 
       if (supabaseError) {
         console.error('❌ Erro do Supabase:', supabaseError);
         throw supabaseError;
       }
 
-      console.log('✅ Dados recebidos:', data?.length || 0, 'grupos');
-      setGroups(data || []);
+      // Buscar contagem de mensagens para todos os grupos de uma vez
+      const { data: messageCounts } = await supabase
+        .from('Lista_de_Mensagens')
+        .select('grupoJid')
+        .in('grupoJid', (groupsData || []).map(g => g.grupo));
+
+      // Criar mapa de contagem
+      const messageCountMap = new Map<string, number>();
+      (messageCounts || []).forEach(msg => {
+        const current = messageCountMap.get(msg.grupoJid) || 0;
+        messageCountMap.set(msg.grupoJid, current + 1);
+      });
+
+      // Processar grupos com contagem
+      const processedGroups = (groupsData || []).map(group => ({
+        ...group,
+        total_mensagens: messageCountMap.get(group.grupo) || 0
+      }));
+
+      console.log('✅ Dados recebidos:', processedGroups.length, 'grupos');
+      setGroups(processedGroups);
     } catch (err) {
       console.error('💥 Erro ao buscar grupos:', err);
       setError('Não foi possível carregar os grupos. Tente novamente.');

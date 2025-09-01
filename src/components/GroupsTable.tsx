@@ -23,8 +23,8 @@ interface GroupsTableProps {
   onClearStatus?: (groupId: number) => Promise<void>;
 }
 
-const getStatusIndicator = (status: string | null, resumo: string | null) => {
-  const statusType = getStatusType(status, resumo);
+const getStatusIndicator = (status: string | null, resumo: string | null, totalMensagens?: number) => {
+  const statusType = getStatusType(status, resumo, totalMensagens);
   
   switch (statusType) {
     case 'critico':
@@ -33,6 +33,8 @@ const getStatusIndicator = (status: string | null, resumo: string | null) => {
       return <Circle className="h-3 w-3 fill-yellow-500 text-yellow-500" />;
     case 'estavel':
       return <Circle className="h-3 w-3 fill-green-500 text-green-500" />;
+    case 'sem-mensagens':
+      return <Circle className="h-3 w-3 fill-gray-300 text-gray-300" />;
     default:
       return <Circle className="h-3 w-3 fill-gray-400 text-gray-400" />;
   }
@@ -49,15 +51,15 @@ export const GroupsTable = ({ groups, onUpdateGroup, onClearStatus }: GroupsTabl
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-e3-dark-card/50">
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Nome do Grupo</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Squad</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Head</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Gestor</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Data de Última Atualização</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Status do Grupo</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold">Situação</TableHead>
-            <TableHead className="text-e3-dark dark:text-white font-poppins font-semibold text-center w-24">Status</TableHead>
+          <TableRow className="border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-shark-dark-card/50">
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Nome do Grupo</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Squad</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Head</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Gestor</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Data de Última Atualização</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Status do Grupo</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold">Situação</TableHead>
+            <TableHead className="text-shark-dark dark:text-white font-poppins font-semibold text-center w-24">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,8 +68,8 @@ export const GroupsTable = ({ groups, onUpdateGroup, onClearStatus }: GroupsTabl
             const hasAnyMessages = group.status || group.resumo;
             
             return (
-              <TableRow key={group.id} className="border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-e3-dark-card/50">
-                <TableCell className="text-e3-dark dark:text-white font-inter font-medium">
+              <TableRow key={group.id} className="border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-shark-dark-card/50">
+                <TableCell className="text-shark-dark dark:text-white font-inter font-medium">
                   {group.nome_grupo || group.grupo}
                 </TableCell>
                 <TableCell className="p-2">
@@ -97,10 +99,10 @@ export const GroupsTable = ({ groups, onUpdateGroup, onClearStatus }: GroupsTabl
                     loading={isConfigLoading}
                   />
                 </TableCell>
-                <TableCell className="text-e3-gray dark:text-gray-300 font-inter">
+                <TableCell className="text-shark-gray dark:text-gray-300 font-inter">
                   {formatDate(group.ultima_atualizacao)}
                 </TableCell>
-                <TableCell className="text-e3-gray dark:text-gray-300 font-inter">
+                <TableCell className="text-shark-gray dark:text-gray-300 font-inter">
                   {!hasAnyMessages 
                     ? "Sem mensagens no grupo"
                     : !hasMessagesToday 
@@ -108,7 +110,7 @@ export const GroupsTable = ({ groups, onUpdateGroup, onClearStatus }: GroupsTabl
                       : (group.status || "Não informado")
                   }
                 </TableCell>
-                <TableCell className="text-e3-gray dark:text-gray-300 font-inter">
+                <TableCell className="text-shark-gray dark:text-gray-300 font-inter">
                   <div className="whitespace-normal break-words">
                     {!hasAnyMessages 
                       ? "Sem mensagens no grupo"
@@ -120,7 +122,7 @@ export const GroupsTable = ({ groups, onUpdateGroup, onClearStatus }: GroupsTabl
                 </TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center gap-2">
-                    {getStatusIndicator(group.status, group.resumo)}
+                    {getStatusIndicator(group.status, group.resumo, group.total_mensagens)}
                     {(group.status || group.resumo) && onClearStatus && (
                       <Button
                         variant="ghost"

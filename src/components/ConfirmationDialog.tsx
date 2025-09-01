@@ -34,22 +34,22 @@ export const ConfirmationDialog = ({
 }: ConfirmationDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-white dark:bg-e3-dark-card border-gray-200 dark:border-gray-600">
+      <AlertDialogContent className="bg-white dark:bg-shark-dark-card border-gray-200 dark:border-gray-600">
         <AlertDialogHeader>
           <div className="flex items-center space-x-2">
             <AlertTriangle className="h-5 w-5 text-red-600" />
-            <AlertDialogTitle className="text-e3-dark dark:text-white font-poppins">
+            <AlertDialogTitle className="text-shark-dark dark:text-white font-poppins">
               {title}
             </AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-e3-gray dark:text-gray-300 font-inter">
+          <AlertDialogDescription className="text-shark-gray dark:text-gray-300 font-inter">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel 
             disabled={loading}
-            className="border-gray-300 dark:border-gray-600 text-e3-dark dark:text-white hover:bg-gray-100 dark:hover:bg-e3-dark-bg"
+            className="border-gray-300 dark:border-gray-600 text-shark-dark dark:text-white hover:bg-gray-100 dark:hover:bg-shark-dark-bg"
           >
             {cancelText}
           </AlertDialogCancel>

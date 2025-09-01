@@ -109,15 +109,15 @@ export const EditableSelectCell = ({
         >
           <SelectTrigger 
             ref={selectRef}
-            className="h-8 min-w-[120px] text-e3-dark dark:text-white bg-white dark:bg-e3-dark-card border-gray-300 dark:border-gray-600"
+            className="h-8 min-w-[120px] text-shark-dark dark:text-white bg-white dark:bg-shark-dark-card border-gray-300 dark:border-gray-600"
             onKeyDown={handleKeyDown}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
-          <SelectContent className="bg-white dark:bg-e3-dark-card border-gray-200 dark:border-gray-600">
+          <SelectContent className="bg-white dark:bg-shark-dark-card border-gray-200 dark:border-gray-600">
             <SelectItem 
               value="null"
-              className="text-e3-gray dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-e3-dark-bg"
+              className="text-shark-gray dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-shark-dark-bg"
             >
               Nenhum
             </SelectItem>
@@ -125,7 +125,7 @@ export const EditableSelectCell = ({
               <SelectItem 
                 key={option.id} 
                 value={option.nome}
-                className="text-e3-dark dark:text-white hover:bg-gray-100 dark:hover:bg-e3-dark-bg"
+                className="text-shark-dark dark:text-white hover:bg-gray-100 dark:hover:bg-shark-dark-bg"
               >
                 {option.nome}
               </SelectItem>
@@ -164,11 +164,11 @@ export const EditableSelectCell = ({
     <button
       onClick={handleStartEdit}
       disabled={loading || isUpdating}
-      className={`text-left hover:bg-gray-100 dark:hover:bg-e3-dark-bg rounded px-2 py-1 transition-colors min-h-[24px] ${
+      className={`text-left hover:bg-gray-100 dark:hover:bg-shark-dark-bg rounded px-2 py-1 transition-colors min-h-[24px] ${
         loading || isUpdating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       } ${className}`}
     >
-      <span className="text-e3-gray dark:text-gray-300 font-inter">
+      <span className="text-shark-gray dark:text-gray-300 font-inter">
         {isUpdating ? (
           <div className="flex items-center space-x-2">
             <Loader2 className="h-3 w-3 animate-spin" />
