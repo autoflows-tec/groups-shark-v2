@@ -14,6 +14,7 @@ export const useGroups = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const { toast } = useToast();
 
   const fetchGroups = async () => {
@@ -85,7 +86,10 @@ export const useGroups = () => {
         },
         (payload) => {
           console.log('Realtime update:', payload);
-          fetchGroups(); // Refetch data when changes occur
+          // Debounce para evitar múltiplas atualizações simultâneas
+          setTimeout(() => {
+            fetchGroups();
+          }, 1000);
         }
       )
       .subscribe();
@@ -96,12 +100,21 @@ export const useGroups = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleRefresh = () => {
-    fetchGroups();
-    toast({
-      title: "Dados atualizados",
-      description: "Os dados dos grupos foram atualizados com sucesso.",
-    });
+  const handleRefresh = async () => {
+    if (refreshing) return; // Previne múltiplos cliques
+    
+    try {
+      setRefreshing(true);
+      await fetchGroups();
+      toast({
+        title: "Dados atualizados",
+        description: "Os dados dos grupos foram atualizados com sucesso.",
+      });
+    } catch (error) {
+      // O erro já é tratado dentro de fetchGroups, então não precisa fazer nada aqui
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const updateGroupField = async (
@@ -339,6 +352,7 @@ export const useGroups = () => {
     groups,
     loading,
     error,
+    refreshing,
     fetchGroups,
     handleRefresh,
     updateGroupField,
