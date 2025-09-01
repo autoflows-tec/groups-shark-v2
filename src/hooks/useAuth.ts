@@ -119,60 +119,53 @@ export const useAuth = () => {
     let mounted = true;
     let timeoutId: NodeJS.Timeout;
 
-    // TIMEOUT DE EMERGÊNCIA: Nunca mais que 5 segundos de loading
+    // TIMEOUT DE EMERGÊNCIA: Nunca mais que 8 segundos de loading
     const emergencyTimeout = setTimeout(() => {
       if (mounted) {
-        console.warn('🚨 TIMEOUT DE EMERGÊNCIA: Forçando fim do loading após 5s');
+        console.warn('🚨 TIMEOUT DE EMERGÊNCIA: Forçando fim do loading após 8s');
+        // Marcar que houve carregamento travado para próxima vez
+        sessionStorage.setItem('auth-stuck-loading', 'true');
         setLoading(false);
       }
-    }, 5000);
+    }, 8000);
 
-    // DETECTAR REFRESH: Múltiplas formas de detectar refresh
-    const isPageRefresh = performance.navigation && performance.navigation.type === 1;
-    const isReload = performance.getEntriesByType && performance.getEntriesByType('navigation')[0]?.type === 'reload';
-    const isReloading = sessionStorage.getItem('isReloading') === 'true';
-    const wasJustReloaded = !document.referrer || document.referrer === window.location.href;
+    // DETECTAR REFRESH apenas em casos específicos de problema
+    const hasAuthState = sessionStorage.getItem('auth-cleaned-on-refresh');
+    const isStuckLoading = sessionStorage.getItem('auth-stuck-loading') === 'true';
     
-    if (isPageRefresh || isReload || isReloading || wasJustReloaded) {
-      console.log('🔄 REFRESH DETECTADO: Limpando dados corrompidos...', {
-        isPageRefresh, isReload, isReloading, wasJustReloaded
-      });
+    // Só fazer limpeza se realmente houver indicação de problema
+    if (isStuckLoading) {
+      console.log('🔄 CARREGAMENTO TRAVADO DETECTADO: Limpando dados corrompidos...');
       
-      // Limpeza agressiva de todos os dados do Supabase
+      // Limpeza apenas das chaves problemáticas
       try {
-        // Limpar TODAS as chaves relacionadas ao Supabase
-        Object.keys(localStorage).forEach(key => {
-          if (key.includes('supabase') || key.includes('auth')) {
-            localStorage.removeItem(key);
-            console.log('🧹 Removendo localStorage:', key);
-          }
+        // Limpar apenas chaves específicas que podem causar problema
+        const problematicKeys = [
+          'sb-' + supabase.supabaseUrl.split('//')[1].split('.')[0] + '-auth-token',
+          'supabase.auth.token'
+        ];
+        
+        problematicKeys.forEach(key => {
+          localStorage.removeItem(key);
+          sessionStorage.removeItem(key);
+          console.log('🧹 Removendo chave problemática:', key);
         });
         
-        Object.keys(sessionStorage).forEach(key => {
-          if (key.includes('supabase') || key.includes('auth') || key.includes('reload')) {
-            sessionStorage.removeItem(key);
-            console.log('🧹 Removendo sessionStorage:', key);
-          }
-        });
-        
-        // Forçar sign out silencioso e limpar client
-        supabase.auth.signOut({ scope: 'local' });
-        
-        // Reset IMEDIATO e forçado de todos os estados
+        // Reset dos estados
         setSession(null);
         setUser(null);
         setProfile(null);
         setLoading(false);
         
-        // Marcar que foi limpo para evitar loop
+        // Remover flag de problema
+        sessionStorage.removeItem('auth-stuck-loading');
         sessionStorage.setItem('auth-cleaned-on-refresh', 'true');
         
-        console.log('✅ RESET COMPLETO: Estados e storage limpos, loading = false');
+        console.log('✅ LIMPEZA ESPECÍFICA: Dados problemáticos removidos');
         return;
         
       } catch (cleanupError) {
         console.error('Erro na limpeza:', cleanupError);
-        // Mesmo com erro, forçar loading = false
         setLoading(false);
         return;
       }
@@ -253,8 +246,10 @@ export const useAuth = () => {
           setLoading(false);
           clearTimeout(emergencyTimeout);
           
-          // Limpar tentativas em caso de sucesso
+          // Limpar flags de problema em caso de sucesso
           sessionStorage.removeItem('auth-load-attempts');
+          sessionStorage.removeItem('auth-stuck-loading');
+          sessionStorage.removeItem('auth-cleaned-on-refresh');
         }
       }
     };
@@ -276,6 +271,11 @@ export const useAuth = () => {
         
         if (session?.user) {
           fetchProfile(session.user.id); // Sem await - não bloquear
+          
+          // Limpar flags de problema quando login for bem-sucedido
+          sessionStorage.removeItem('auth-load-attempts');
+          sessionStorage.removeItem('auth-stuck-loading');
+          sessionStorage.removeItem('auth-cleaned-on-refresh');
         } else {
           setProfile(null);
         }
