@@ -19,23 +19,40 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Buscar perfil do usuário
+  // Circuit breaker: Se já tentou carregar muitas vezes, parar
+  const loadAttempts = Number(sessionStorage.getItem('auth-load-attempts') || '0');
+  const maxAttempts = 3;
+
+  // Buscar perfil do usuário (execução independente, não bloqueia loading)
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      console.log('👤 Fetching profile for user:', userId);
+      
+      // Timeout para fetchProfile - máximo 5 segundos
+      const profilePromise = supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
+      
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+      );
+      
+      const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any;
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error);
+        console.error('❌ Error fetching profile:', error);
+        // Não setProfile em caso de erro - deixar como null
         return;
       }
 
+      console.log('✅ Profile fetched:', data?.username || data?.full_name || 'No name');
       setProfile(data);
     } catch (error) {
-      console.error('Error in fetchProfile:', error);
+      console.error('💥 Critical error in fetchProfile:', error);
+      // Em caso de erro, definir perfil vazio mas não quebrar app
+      setProfile(null);
     }
   };
 
@@ -99,25 +116,146 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    // Buscar sessão inicial
+    let mounted = true;
+    let timeoutId: NodeJS.Timeout;
+
+    // TIMEOUT DE EMERGÊNCIA: Nunca mais que 5 segundos de loading
+    const emergencyTimeout = setTimeout(() => {
+      if (mounted) {
+        console.warn('🚨 TIMEOUT DE EMERGÊNCIA: Forçando fim do loading após 5s');
+        setLoading(false);
+      }
+    }, 5000);
+
+    // DETECTAR REFRESH: Múltiplas formas de detectar refresh
+    const isPageRefresh = performance.navigation && performance.navigation.type === 1;
+    const isReload = performance.getEntriesByType && performance.getEntriesByType('navigation')[0]?.type === 'reload';
+    const isReloading = sessionStorage.getItem('isReloading') === 'true';
+    const wasJustReloaded = !document.referrer || document.referrer === window.location.href;
+    
+    if (isPageRefresh || isReload || isReloading || wasJustReloaded) {
+      console.log('🔄 REFRESH DETECTADO: Limpando dados corrompidos...', {
+        isPageRefresh, isReload, isReloading, wasJustReloaded
+      });
+      
+      // Limpeza agressiva de todos os dados do Supabase
+      try {
+        // Limpar TODAS as chaves relacionadas ao Supabase
+        Object.keys(localStorage).forEach(key => {
+          if (key.includes('supabase') || key.includes('auth')) {
+            localStorage.removeItem(key);
+            console.log('🧹 Removendo localStorage:', key);
+          }
+        });
+        
+        Object.keys(sessionStorage).forEach(key => {
+          if (key.includes('supabase') || key.includes('auth') || key.includes('reload')) {
+            sessionStorage.removeItem(key);
+            console.log('🧹 Removendo sessionStorage:', key);
+          }
+        });
+        
+        // Forçar sign out silencioso e limpar client
+        supabase.auth.signOut({ scope: 'local' });
+        
+        // Reset IMEDIATO e forçado de todos os estados
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+        
+        // Marcar que foi limpo para evitar loop
+        sessionStorage.setItem('auth-cleaned-on-refresh', 'true');
+        
+        console.log('✅ RESET COMPLETO: Estados e storage limpos, loading = false');
+        return;
+        
+      } catch (cleanupError) {
+        console.error('Erro na limpeza:', cleanupError);
+        // Mesmo com erro, forçar loading = false
+        setLoading(false);
+        return;
+      }
+    }
+    
+    // Se foi limpo recentemente, não fazer nova verificação
+    if (sessionStorage.getItem('auth-cleaned-on-refresh') === 'true') {
+      console.log('🚫 Auth foi limpa recentemente, pulando verificação');
+      sessionStorage.removeItem('auth-cleaned-on-refresh');
+      setLoading(false);
+      return;
+    }
+    
+    // Circuit breaker: Se já tentou muitas vezes, desistir
+    if (loadAttempts >= maxAttempts) {
+      console.warn('🛑 CIRCUIT BREAKER: Muitas tentativas falhas, forçando logout');
+      supabase.auth.signOut();
+      setSession(null);
+      setUser(null); 
+      setProfile(null);
+      setLoading(false);
+      sessionStorage.removeItem('auth-load-attempts');
+      return;
+    }
+    
+    // Incrementar tentativas
+    sessionStorage.setItem('auth-load-attempts', String(loadAttempts + 1));
+
+    // Buscar sessão inicial apenas se não for refresh
     const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        console.log('⏱️ [' + new Date().toISOString() + '] Getting initial session...');
+        
+        // Timeout mais curto para evitar travamento
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Session timeout')), 3000)
+        );
+        
+        const { data: { session }, error } = await Promise.race([sessionPromise, timeoutPromise]) as any;
+        
+        if (!mounted) {
+          console.log('🚫 Component unmounted, aborting session check');
+          return;
+        }
         
         if (error) {
-          console.error('Error getting session:', error);
+          console.error('❌ Error getting session:', error);
+          // Limpar possível sessão corrompida
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          setProfile(null);
         } else {
+          console.log('✅ Session loaded:', session?.user?.email || 'No session');
           setSession(session);
           setUser(session?.user ?? null);
           
+          // SEPARAR: Profile carrega de forma independente (não bloquear loading)
           if (session?.user) {
-            await fetchProfile(session.user.id);
+            fetchProfile(session.user.id); // Sem await - executa em background
+          } else {
+            setProfile(null);
           }
         }
       } catch (error) {
-        console.error('Error in getInitialSession:', error);
+        console.error('💥 Critical error in getInitialSession:', error);
+        // Em caso de erro crítico, limpar tudo
+        if (mounted) {
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          console.log('🏁 Initial session check completed, setting loading = false');
+          setLoading(false);
+          clearTimeout(emergencyTimeout);
+          
+          // Limpar tentativas em caso de sucesso
+          sessionStorage.removeItem('auth-load-attempts');
+        }
       }
     };
 
@@ -126,23 +264,32 @@ export const useAuth = () => {
     // Listener para mudanças de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
+        if (!mounted) {
+          console.log('🚫 Auth change ignored - component unmounted');
+          return;
+        }
+        
+        console.log('🔄 Auth state changed:', event, session?.user?.email || 'No session');
         
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          fetchProfile(session.user.id); // Sem await - não bloquear
         } else {
           setProfile(null);
         }
         
+        // Garantir que loading seja false em mudanças de auth
         setLoading(false);
       }
     );
 
     return () => {
+      mounted = false;
+      clearTimeout(emergencyTimeout);
       subscription.unsubscribe();
+      console.log('🧹 useAuth cleanup completed');
     };
   }, []);
 

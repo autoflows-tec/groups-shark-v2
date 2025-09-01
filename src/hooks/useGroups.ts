@@ -19,10 +19,9 @@ export const useGroups = () => {
 
   const fetchGroups = async () => {
     try {
+      console.log('🔄 fetchGroups: Iniciando busca pelos grupos...');
       setLoading(true);
       setError(null);
-      
-      console.log('🔄 Iniciando busca pelos grupos...');
       
       // Buscar grupos
       const { data: groupsData, error: supabaseError, count } = await supabase
@@ -72,30 +71,41 @@ export const useGroups = () => {
   };
 
   useEffect(() => {
-    fetchGroups();
+    let mounted = true;
 
-    // Set up realtime subscription
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'Lista_de_Grupos'
-        },
-        (payload) => {
-          console.log('Realtime update:', payload);
-          // Debounce para evitar múltiplas atualizações simultâneas
-          setTimeout(() => {
-            fetchGroups();
-          }, 1000);
-        }
-      )
-      .subscribe();
+    const loadGroups = async () => {
+      if (mounted) {
+        console.log('Loading groups...');
+        await fetchGroups();
+      }
+    };
+
+    loadGroups();
+
+    // TODO: Realtime subscription temporariamente desabilitado para debug
+    // const channel = supabase
+    //   .channel('schema-db-changes')
+    //   .on(
+    //     'postgres_changes',
+    //     {
+    //       event: '*',
+    //       schema: 'public',
+    //       table: 'Lista_de_Grupos'
+    //     },
+    //     (payload) => {
+    //       console.log('Realtime update:', payload);
+    //       if (mounted) {
+    //         setTimeout(() => {
+    //           fetchGroups();
+    //         }, 1000);
+    //       }
+    //     }
+    //   )
+    //   .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      mounted = false;
+      // if (channel) supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
