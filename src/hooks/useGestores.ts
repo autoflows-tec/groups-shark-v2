@@ -13,6 +13,7 @@ export const useGestores = () => {
 
   const fetchGestores = async () => {
     try {
+      console.log('🔄 fetchGestores: Buscando gestores...');
       setLoading(true);
       setError(null);
       
@@ -22,9 +23,13 @@ export const useGestores = () => {
         .eq('ativo', true)
         .order('nome', { ascending: true });
 
+      console.log('📊 Resposta Gestores:', { data, error });
+      
       if (error) throw error;
       setGestores(data || []);
+      console.log('✅ Gestores carregados:', data?.length || 0);
     } catch (err) {
+      console.error('❌ Erro ao carregar gestores:', err);
       setError(err instanceof Error ? err.message : 'Erro ao carregar gestores');
     } finally {
       setLoading(false);

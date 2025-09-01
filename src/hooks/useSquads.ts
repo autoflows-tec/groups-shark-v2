@@ -13,6 +13,7 @@ export const useSquads = () => {
 
   const fetchSquads = async () => {
     try {
+      console.log('🔄 fetchSquads: Buscando squads...');
       setLoading(true);
       setError(null);
       
@@ -22,9 +23,13 @@ export const useSquads = () => {
         .eq('ativo', true)
         .order('nome', { ascending: true });
 
+      console.log('📊 Resposta Squads:', { data, error });
+      
       if (error) throw error;
       setSquads(data || []);
+      console.log('✅ Squads carregados:', data?.length || 0);
     } catch (err) {
+      console.error('❌ Erro ao carregar squads:', err);
       setError(err instanceof Error ? err.message : 'Erro ao carregar squads');
     } finally {
       setLoading(false);

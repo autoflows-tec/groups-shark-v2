@@ -46,6 +46,7 @@ export const GroupsTable = ({ groups, onUpdateGroup, onClearStatus }: GroupsTabl
   const { heads, loading: headsLoading } = useHeads();
   const { gestores, loading: gestoresLoading } = useGestores();
 
+
   const isConfigLoading = squadsLoading || headsLoading || gestoresLoading;
   return (
     <div className="overflow-x-auto">

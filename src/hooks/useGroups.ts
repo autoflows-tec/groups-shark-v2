@@ -133,6 +133,14 @@ export const useGroups = () => {
     value: string | null
   ) => {
     try {
+      console.log('🔧 updateGroupField:', { groupId, field, value });
+      
+      // Verificar se a coluna existe na tabela
+      const validFields = ['squad', 'head', 'gestor'];
+      if (!validFields.includes(field)) {
+        throw new Error(`Campo '${field}' não é válido`);
+      }
+
       // Update otimista na UI
       setGroups(prevGroups => 
         prevGroups.map(group => 
@@ -143,12 +151,19 @@ export const useGroups = () => {
       );
 
       // Update no banco de dados
-      const { error: updateError } = await supabase
+      console.log('📤 Executando update no banco:', { table: 'Lista_de_Grupos', field, value, groupId });
+      
+      const { data, error: updateError } = await supabase
         .from('Lista_de_Grupos')
         .update({ [field]: value })
-        .eq('id', groupId);
+        .eq('id', groupId)
+        .select();
+
+      console.log('📥 Resposta do update:', { data, error: updateError });
 
       if (updateError) {
+        console.error('❌ Erro no update:', updateError);
+        
         // Reverter update otimista em caso de erro
         setGroups(prevGroups => 
           prevGroups.map(group => 
@@ -167,13 +182,14 @@ export const useGroups = () => {
         gestor: 'Gestor'
       };
 
+      console.log('✅ Update realizado com sucesso');
       toast({
         title: "Atualizado com sucesso!",
         description: `${fieldNames[field]} do grupo foi atualizado.`,
       });
 
     } catch (err) {
-      console.error(`Erro ao atualizar ${field}:`, err);
+      console.error(`💥 Erro ao atualizar ${field}:`, err);
       toast({
         title: "Erro ao atualizar",
         description: `Não foi possível atualizar o ${field}. Tente novamente.`,

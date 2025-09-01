@@ -13,6 +13,7 @@ export const useHeads = () => {
 
   const fetchHeads = async () => {
     try {
+      console.log('🔄 fetchHeads: Buscando heads...');
       setLoading(true);
       setError(null);
       
@@ -22,9 +23,13 @@ export const useHeads = () => {
         .eq('ativo', true)
         .order('nome', { ascending: true });
 
+      console.log('📊 Resposta Heads:', { data, error });
+      
       if (error) throw error;
       setHeads(data || []);
+      console.log('✅ Heads carregados:', data?.length || 0);
     } catch (err) {
+      console.error('❌ Erro ao carregar heads:', err);
       setError(err instanceof Error ? err.message : 'Erro ao carregar heads');
     } finally {
       setLoading(false);
