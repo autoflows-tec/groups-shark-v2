@@ -9,13 +9,11 @@ import { Loader2, Mail, Lock } from 'lucide-react';
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
   const { toast } = useToast();
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !password) {
@@ -27,60 +25,25 @@ export default function Auth() {
       return;
     }
 
-    if (isSignUp && !fullName) {
-      toast({
-        title: "Nome obrigatório",
-        description: "Por favor, preencha seu nome completo.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-            }
-          }
-        });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        if (data?.user && !data?.session) {
-          toast({
-            title: "Verifique seu email",
-            description: "Enviamos um link de confirmação para seu email.",
-          });
-        } else {
-          toast({
-            title: "Conta criada!",
-            description: "Bem-vindo ao sistema.",
-          });
-        }
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) throw error;
-
-        toast({
-          title: "Login realizado!",
-          description: "Bem-vindo de volta ao sistema.",
-        });
-      }
+      toast({
+        title: "Login realizado!",
+        description: "Bem-vindo de volta ao sistema.",
+      });
     } catch (error: any) {
       console.error('Auth error:', error);
       toast({
         title: "Erro na autenticação",
-        description: error.message || "Não foi possível realizar a operação.",
+        description: error.message || "Credenciais inválidas.",
         variant: "destructive",
       });
     } finally {
@@ -96,35 +59,15 @@ export default function Auth() {
             <SharkLogo className="h-16 w-auto" />
           </div>
           <CardTitle className="text-2xl font-poppins font-bold text-shark-dark dark:text-white">
-            {isSignUp ? 'Criar Conta' : 'Entrar'}
+            Entrar
           </CardTitle>
           <p className="text-sm text-shark-gray dark:text-gray-300 font-inter">
-            {isSignUp 
-              ? 'Crie sua conta para acessar o painel de grupos'
-              : 'Entre com suas credenciais para acessar o sistema'
-            }
+            Entre com suas credenciais para acessar o sistema
           </p>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleAuth} className="space-y-4">
-            {isSignUp && (
-              <div className="space-y-2">
-                <label htmlFor="fullName" className="text-sm font-medium text-shark-dark dark:text-white font-inter">
-                  Nome Completo
-                </label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  placeholder="Seu nome completo"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="font-inter"
-                  disabled={loading}
-                />
-              </div>
-            )}
-
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium text-shark-dark dark:text-white font-inter">
                 Email
@@ -167,31 +110,8 @@ export default function Auth() {
               disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {loading 
-                ? (isSignUp ? 'Criando conta...' : 'Entrando...') 
-                : (isSignUp ? 'Criar Conta' : 'Entrar')
-              }
+              {loading ? 'Entrando...' : 'Entrar'}
             </Button>
-
-            <div className="text-center">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setEmail('');
-                  setPassword('');
-                  setFullName('');
-                }}
-                disabled={loading}
-                className="text-shark-primary hover:text-shark-primary/80 font-inter"
-              >
-                {isSignUp 
-                  ? 'Já tem uma conta? Faça login' 
-                  : 'Não tem conta? Cadastre-se'
-                }
-              </Button>
-            </div>
           </form>
         </CardContent>
       </Card>
